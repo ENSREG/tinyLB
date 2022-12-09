@@ -1,12 +1,24 @@
 # TLB (Tiny Load Balancer)
 
-This project is inspired by [eBPF Summit 2021: An eBPF Load Balancer from scratch](https://www.youtube.com/watch?v=L3_AOFSNKK8).
+該專案受 [eBPF Summit 2021: An eBPF Load Balancer from scratch](https://www.youtube.com/watch?v=L3_AOFSNKK8) 啟發，並且修改自 [lb-from-scratch](https://github.com/lizrice/lb-from-scratch) 專案。
 
+## 什麼是 TLB？
+
+一個不到 100 行的 eBPF 程式，它利用 XDP 實作一個簡單的 HTTP load balancer。
+
+## 開始
+
+首先，編譯 load balancer 所需要的 docker image：
+```sh
+./build_image.sh
 ```
-docker run --rm -it --privileged ianchen0119/lb:latest bash
+編譯完成後，執行以下指令啟動測試環境：
+```sh
+cd compose
+docker compose up
 ```
 
-## Observe the output from bpf program
+### 觀察 load balancer 的輸出
 
 ```bash
 sudo cat /sys/kernel/debug/tracing/trace_pipe

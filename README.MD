@@ -5,7 +5,14 @@
 ## 什麼是 TinyLB？
 
 一個不到 100 行的 eBPF 程式，它利用 XDP 實作一個簡單的 HTTP load balancer。
-TinyLB 依賴 libbpf（commit: 8bdc267）。
+TinyLB 依賴 [libbpf](https://github.com/libbpf/libbpf/tree/8bdc267e7b853ca08ed762b21fecc0e019ddc332)（commit: 8bdc267），開始前請先下載 libbpf：
+```sh
+cd tinyLB
+git clone https://github.com/libbpf/libbpf.git
+cd libbpf
+git checkout 8bdc267
+```
+
 
 ## 開始
 

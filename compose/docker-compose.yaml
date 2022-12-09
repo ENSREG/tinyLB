@@ -1,9 +1,4 @@
 version: '3.8'
-
-# docker run -d --rm --name backend-A -h backend-A --env TERM=xterm-color nginxdemos/hello:plain-text
-# docker run -d --rm --name backend-B -h backend-B --env TERM=xterm-color nginxdemos/hello:plain-text
-# docker run --rm -it -h client --name client --env TERM=xterm-color ubuntu
-
 services:
   client:
     container_name: client

@@ -18,6 +18,7 @@ git checkout 8bdc267
 
 首先，編譯 load balancer 所需要的 docker image：
 ```sh
+cd tinyLB
 ./build_image.sh
 ```
 編譯完成後，執行以下指令啟動測試環境：

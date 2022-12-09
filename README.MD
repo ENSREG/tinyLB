@@ -1,10 +1,11 @@
-# TLB (Tiny Load Balancer)
+# TinyLB (Tiny Load Balancer)
 
 該專案受 [eBPF Summit 2021: An eBPF Load Balancer from scratch](https://www.youtube.com/watch?v=L3_AOFSNKK8) 啟發，並且修改自 [lb-from-scratch](https://github.com/lizrice/lb-from-scratch) 專案。
 
-## 什麼是 TLB？
+## 什麼是 TinyLB？
 
 一個不到 100 行的 eBPF 程式，它利用 XDP 實作一個簡單的 HTTP load balancer。
+TinyLB 依賴 libbpf（commit: 8bdc267）。
 
 ## 開始
 
@@ -18,7 +19,7 @@ cd compose
 docker compose up
 ```
 
-### 觀察 load balancer 的輸出
+### 觀察 TinyLB 的輸出
 
 ```bash
 sudo cat /sys/kernel/debug/tracing/trace_pipe

@@ -18,7 +18,7 @@ services:
   lb:
     container_name: lb
     image: ianchen0119/lb:latest
-    command: bash -c "make && sleep 10000000000000"
+    command: bash -c "make run"
     privileged: true
     cap_add:
       - NET_ADMIN
@@ -28,7 +28,6 @@ services:
   backend-a:
     container_name: backend-a
     image: nginxdemos/hello:plain-text
-    # command: sleep 10000000000000
     privileged: true
     cap_add:
       - NET_ADMIN
@@ -38,7 +37,6 @@ services:
   backend-b:
     container_name: backend-b
     image: nginxdemos/hello:plain-text
-    # command: sleep 10000000000000
     privileged: true
     cap_add:
       - NET_ADMIN

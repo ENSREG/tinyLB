@@ -7,7 +7,6 @@ WORKDIR /ianchen
 
 COPY Makefile ./Makefile
 COPY libbpf ./libbpf
-COPY xdp_kern.h ./xdp_kern.h
 COPY xdp_lb_kern.h ./xdp_lb_kern.h
 COPY xdp_lb_kern.c ./xdp_lb_kern.c
 COPY main.py ./main.py

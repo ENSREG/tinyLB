@@ -1,0 +1,57 @@
+version: '3.8'
+services:
+  # client:
+  #   container_name: client
+  #   image: ubuntu:20.04
+  #   command: bash -c "apt-get update && apt-get install -y curl && sleep infinity"
+  #   privileged: true
+  #   cap_add:
+  #     - NET_ADMIN
+  #   networks:
+  #     lbnet:
+  #       ipv4_address: 192.17.0.4
+  lb:
+    container_name: lb
+    image: ianchen0119/lb:latest
+    command: bash -c "make run"
+    privileged: true
+    cap_add:
+      - NET_ADMIN
+    volumes:
+      - ./xdp_lb_user:/ianchen/xdp_lb_user
+      - ./Makefile:/ianchen/Makefile
+      - ./xdp_lb_kern.h:/ianchen/xdp_lb_kern.h
+      - ./xdp_lb_kern.c:/ianchen/xdp_lb_kern.c
+      - ./main.py:/ianchen/main.py
+    networks:
+      lbnet:
+        ipv4_address: 192.17.0.5
+  # backend-a:
+  #   container_name: backend-a
+  #   image: nginxdemos/hello:plain-text
+  #   privileged: true
+  #   cap_add:
+  #     - NET_ADMIN
+  #   networks:
+  #     lbnet:
+  #       ipv4_address: 192.17.0.2
+  # backend-b:
+  #   container_name: backend-b
+  #   image: nginxdemos/hello:plain-text
+  #   privileged: true
+  #   cap_add:
+  #     - NET_ADMIN
+  #   networks:
+  #     lbnet:
+  #       ipv4_address: 192.17.0.3
+networks:
+  lbnet:
+    ipam:
+      driver: default
+      config:
+        - subnet: 192.17.0.0/24
+    driver_opts:
+      com.docker.network.bridge.name: br-lb
+
+volumes:
+  dbdata:

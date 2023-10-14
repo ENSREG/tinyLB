@@ -7,8 +7,15 @@
 #define LB 5
 #define HTTP_PORT 80
 
+struct {
+	__uint(type, BPF_MAP_TYPE_HASH);
+	__type(key, __u32);
+	__type(value, __u32);
+	__uint(max_entries, 64);
+} lb_map SEC(".maps");
+
 SEC("xdp_lb")
-int xdp_load_balancer(struct xdp_md *ctx)
+int tiny_lb(struct xdp_md *ctx)
 {
     void *data = (void *)(long)ctx->data;
     void *data_end = (void *)(long)ctx->data_end;
@@ -35,16 +42,30 @@ int xdp_load_balancer(struct xdp_md *ctx)
     if (iph->saddr == IP_ADDRESS(CLIENT) && bpf_ntohs(tcph->dest) == HTTP_PORT)
     {
         bpf_printk("Got http request from %x", iph->saddr);
-        char dst = BACKEND_A;
+        int dst = BACKEND_A;
         if (bpf_ktime_get_ns() % 2)
             dst = BACKEND_B;
 
-        iph->daddr = IP_ADDRESS(dst);
+        __u32 *dst_ip = bpf_map_lookup_elem(&lb_map, &dst);
+        if (!dst_ip) {
+            bpf_printk("Error: Destination IP not found in the map");
+            return XDP_PASS;
+        }
+
+        iph->daddr = *dst_ip;
         eth->h_dest[5] = dst;
     } else if (iph->saddr == IP_ADDRESS(BACKEND_A) || iph->saddr == IP_ADDRESS(BACKEND_B))
     {
         bpf_printk("Got the http response from backend [%x]: forward to client %x", iph->saddr, iph->daddr);
-        iph->daddr = IP_ADDRESS(CLIENT);
+
+        int c = CLIENT;
+        __u32 *client_ip = bpf_map_lookup_elem(&lb_map, &c);
+        if (!client_ip) {
+            bpf_printk("Error: Client IP not found in the map");
+            return XDP_PASS;
+        }
+
+        iph->daddr = *client_ip;
         eth->h_dest[5] = CLIENT;
     } else {
         flag = 0;

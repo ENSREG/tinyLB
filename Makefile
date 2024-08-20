@@ -5,6 +5,9 @@ USER_TARGET = ${TARGET:=_user}
 BPF_C = ${BPF_TARGET:=.c}
 BPF_OBJ = ${BPF_C:.c=.o}
 
+lb:
+	docker exec -it lb bash
+
 user: $(USER_TARGET)
 $(USER_TARGET): %: %.c  
 	gcc -Wall $(CFLAGS) -Ilibbpf/src -Ilibbpf/src/include/uapi -Llibbpf/src -o $@  \
@@ -17,11 +20,11 @@ xdp: $(BPF_OBJ)
 
 run: $(BPF_OBJ)
 	./xdp_lb_user &
+	bpftool net attach xdpgeneric name tiny_lb dev eth0
 	sleep infinity
-	#bpftool net attach xdpgeneric pinned /sys/fs/bpf/$(TARGET) dev eth0 
 
 $(BPF_OBJ): %.o: %.c
-	clang-9 -S \
+	clang -S \
 	    -target bpf \
 	    -D __BPF_TRACING__ \
 	    -Ilibbpf/src\
@@ -33,6 +36,14 @@ $(BPF_OBJ): %.o: %.c
 	    -O2 -c -g \
 		-o ${@:.o=.ll} $<
 	llc -march=bpf -filetype=obj -o $@ ${@:.o=.ll}
+
+.PHONY: libbpf
+libbpf:
+	git clone https://github.com/libbpf/libbpf.git && \
+	cd libbpf && \
+	git checkout 8bdc267 && \
+	cd src && \
+	make
 
 clean:
 	bpftool net detach xdpgeneric dev eth0

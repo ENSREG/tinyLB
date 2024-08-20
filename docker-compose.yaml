@@ -22,7 +22,6 @@ services:
       - ./Makefile:/ianchen/Makefile
       - ./xdp_lb_kern.h:/ianchen/xdp_lb_kern.h
       - ./xdp_lb_kern.c:/ianchen/xdp_lb_kern.c
-      - ./main.py:/ianchen/main.py
     networks:
       lbnet:
         ipv4_address: 192.17.0.5

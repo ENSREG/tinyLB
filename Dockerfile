@@ -1,10 +1,11 @@
-FROM ubuntu:20.04
+FROM ubuntu:22.04
 
-RUN apt-get update && \
-apt-get install -y clang-9 llvm vim libelf-dev libpcap-dev python gcc-multilib build-essential make sudo linux-tools-$(uname -r) linux-tools-generic linux-tools-common
+RUN apt-get update
+RUN apt-get install -y clang llvm vim libelf-dev \
+    libpcap-dev gcc-multilib build-essential make sudo
+RUN apt-get install -y linux-tools-$(uname -r) linux-tools-common linux-tools-generic
 
 WORKDIR /ianchen
 
 COPY libbpf ./libbpf
-
-CMD [ "python", "main.py" ]
+CMD ["/bin/bash"]

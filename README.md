@@ -7,22 +7,17 @@
 一個不到 100 行的 eBPF 程式，它利用 XDP 實作一個簡單的 HTTP load balancer。
 TinyLB 依賴 [libbpf](https://github.com/libbpf/libbpf/tree/8bdc267e7b853ca08ed762b21fecc0e019ddc332)（commit: 8bdc267），開始前請先下載 libbpf：
 ```sh
-cd tinyLB
-git clone https://github.com/libbpf/libbpf.git
-cd libbpf
-git checkout 8bdc267
-# build both static libbpf.a and shared libbpf.so
-cd src
-make
+make libbpf
 ```
 
 
 ## 開始
 
-首先，編譯 load balancer 所需要的 docker image：
+首先，編譯 load balancer 所需要的 docker image 以及工具：
 ```sh
 cd tinyLB
 ./build_image.sh
+make user
 ```
 編譯完成後，執行以下指令啟動測試環境：
 ```sh
@@ -48,9 +43,13 @@ $ bpftool prog show
         xlated 1544B  jited 921B  memlock 4096B  map_ids 47
         btf_id 164
 ```
-在這個範例中，`256` 為 tinyLB 的 ID，使用 bpftool 即可將 tinyLB 附加到指定網卡上：
+在這個範例中，`256` 為 tinyLB 的 ID，使用 bpftool 即可將 tinyLB 附加到指定網卡上（目前 attach 的動作會被 make 腳本自動完成，所以下面步驟可以忽略）：
 ```bash
 $ bpftool net attach xdpgeneric id 256 dev eth0
+```
+或是：
+```bash
+bpftool net attach xdpgeneric name tiny_lb dev eth0
 ```
 
 TinyLB 將 loadbalancing rule 存放於 BPF Map 上，使用 bpftool 可以觀察 Map 的內容：
@@ -74,4 +73,8 @@ $ bpftool map dump id 47
         "value": 3222339588
     }
 ]
+```
+或是：
+```bash
+$ bpftool map dump name lb_map
 ```

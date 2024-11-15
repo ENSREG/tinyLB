@@ -24,13 +24,13 @@ int tiny_lb(struct xdp_md *ctx)
     if (data + sizeof(struct ethhdr) > data_end)
         return XDP_ABORTED;
 
-    if (bpf_ntohs(eth->h_proto) != ETH_P_IP)
+    if (bpf_ntohs(BPF_CORE_READ(eth, h_proto)) != ETH_P_IP)
         return XDP_PASS;
     struct iphdr *iph = data + sizeof(struct ethhdr);
     if (data + sizeof(struct ethhdr) + sizeof(struct iphdr) > data_end)
         return XDP_ABORTED;
 
-    if (iph->protocol != IPPROTO_TCP)
+    if (BPF_CORE_READ(iph, protocol) != IPPROTO_TCP)
         return XDP_PASS;
 
     struct tcphdr *tcph = data + sizeof(struct ethhdr) + sizeof(struct iphdr);
@@ -39,9 +39,11 @@ int tiny_lb(struct xdp_md *ctx)
 
     int flag = 1;
 
-    if (iph->saddr == IP_ADDRESS(CLIENT) && bpf_ntohs(tcph->dest) == HTTP_PORT)
+    __be32 ip_saddr = BPF_CORE_READ(iph, saddr);
+    if (ip_saddr == IP_ADDRESS(CLIENT) && 
+        bpf_ntohs(BPF_CORE_READ(tcph, dest)) == HTTP_PORT)
     {
-        bpf_printk("Got http request from %x", iph->saddr);
+        bpf_printk("Got http request from %x", ip_saddr);
         int dst = BACKEND_A;
         if (bpf_ktime_get_ns() % 2)
             dst = BACKEND_B;
@@ -53,6 +55,7 @@ int tiny_lb(struct xdp_md *ctx)
         }
 
         iph->daddr = *dst_ip;
+        // BPF_CORE_READ_INTO(&iph->daddr, dst_ip);
         eth->h_dest[5] = dst;
     } else if (iph->saddr == IP_ADDRESS(BACKEND_A) || iph->saddr == IP_ADDRESS(BACKEND_B))
     {

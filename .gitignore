@@ -3,3 +3,4 @@
 .vscode
 libbpf
 xdp_lb_user
+vmlinux/vmlinux.h

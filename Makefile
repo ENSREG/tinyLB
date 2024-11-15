@@ -8,6 +8,9 @@ BPF_OBJ = ${BPF_C:.c=.o}
 lb:
 	docker exec -it lb bash
 
+btf:
+	bpftool btf dump file /sys/kernel/btf/vmlinux format c > vmlinux/vmlinux.h
+
 user: $(USER_TARGET)
 $(USER_TARGET): %: %.c  
 	gcc -Wall $(CFLAGS) -Ilibbpf/src -Ilibbpf/src/include/uapi -Llibbpf/src -o $@  \
@@ -20,20 +23,21 @@ xdp: $(BPF_OBJ)
 
 run: $(BPF_OBJ)
 	./xdp_lb_user &
-	bpftool net attach xdpgeneric name tiny_lb dev eth0
+	sleep 1 && bpftool net attach xdpgeneric name tiny_lb dev eth0
 	sleep infinity
 
 $(BPF_OBJ): %.o: %.c
 	clang -S \
-	    -target bpf \
-	    -D __BPF_TRACING__ \
-	    -Ilibbpf/src\
-	    -Wall \
-	    -Wno-unused-value \
-	    -Wno-pointer-sign \
-	    -Wno-compare-distinct-pointer-types \
-	    -Werror -emit-llvm \
-	    -O2 -c -g \
+		-target bpf \
+		-D __BPF_TRACING__ \
+		-I vmlinux/ \
+		-I libbpf/src \
+		-Wall \
+		-Wno-unused-value \
+		-Wno-pointer-sign \
+		-Wno-compare-distinct-pointer-types \
+		-Werror -emit-llvm \
+		-O2 -c -g \
 		-o ${@:.o=.ll} $<
 	llc -march=bpf -filetype=obj -o $@ ${@:.o=.ll}
 

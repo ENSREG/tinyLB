@@ -10,6 +10,7 @@ services:
   #   networks:
   #     lbnet:
   #       ipv4_address: 192.17.0.4
+
   lb:
     container_name: lb
     image: ianchen0119/lb:latest
@@ -22,9 +23,11 @@ services:
       - ./Makefile:/ianchen/Makefile
       - ./xdp_lb_kern.h:/ianchen/xdp_lb_kern.h
       - ./xdp_lb_kern.c:/ianchen/xdp_lb_kern.c
+      - ./vmlinux:/ianchen/vmlinux
     networks:
       lbnet:
         ipv4_address: 192.17.0.5
+
   # backend-a:
   #   container_name: backend-a
   #   image: nginxdemos/hello:plain-text

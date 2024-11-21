@@ -1,15 +1,15 @@
 version: '3.8'
 services:
-  # client:
-  #   container_name: client
-  #   image: ubuntu:20.04
-  #   command: bash -c "apt-get update && apt-get install -y curl && sleep infinity"
-  #   privileged: true
-  #   cap_add:
-  #     - NET_ADMIN
-  #   networks:
-  #     lbnet:
-  #       ipv4_address: 192.17.0.4
+  client:
+    container_name: client
+    image: ubuntu:20.04
+    command: bash -c "apt-get update && apt-get install -y curl && sleep infinity"
+    privileged: true
+    cap_add:
+      - NET_ADMIN
+    networks:
+      lbnet:
+        ipv4_address: 192.17.0.4
 
   lb:
     container_name: lb
@@ -28,24 +28,24 @@ services:
       lbnet:
         ipv4_address: 192.17.0.5
 
-  # backend-a:
-  #   container_name: backend-a
-  #   image: nginxdemos/hello:plain-text
-  #   privileged: true
-  #   cap_add:
-  #     - NET_ADMIN
-  #   networks:
-  #     lbnet:
-  #       ipv4_address: 192.17.0.2
-  # backend-b:
-  #   container_name: backend-b
-  #   image: nginxdemos/hello:plain-text
-  #   privileged: true
-  #   cap_add:
-  #     - NET_ADMIN
-  #   networks:
-  #     lbnet:
-  #       ipv4_address: 192.17.0.3
+  backend-a:
+    container_name: backend-a
+    image: nginxdemos/hello:plain-text
+    privileged: true
+    cap_add:
+      - NET_ADMIN
+    networks:
+      lbnet:
+        ipv4_address: 192.17.0.2
+  backend-b:
+    container_name: backend-b
+    image: nginxdemos/hello:plain-text
+    privileged: true
+    cap_add:
+      - NET_ADMIN
+    networks:
+      lbnet:
+        ipv4_address: 192.17.0.3
 networks:
   lbnet:
     ipam:

@@ -37,7 +37,6 @@ int tiny_lb(struct xdp_md *ctx)
     if (data + sizeof(struct ethhdr) + sizeof(struct iphdr) + sizeof(struct tcphdr) > data_end)
         return XDP_ABORTED;
 
-    int flag = 1;
 
     __be32 ip_saddr = BPF_CORE_READ(iph, saddr);
     if (ip_saddr == IP_ADDRESS(CLIENT) && 
@@ -54,8 +53,7 @@ int tiny_lb(struct xdp_md *ctx)
             return XDP_PASS;
         }
 
-        iph->daddr = *dst_ip;
-        // BPF_CORE_READ_INTO(&iph->daddr, dst_ip);
+        iph->daddr = bpf_htonl(*dst_ip);
         eth->h_dest[5] = dst;
     } else if (iph->saddr == IP_ADDRESS(BACKEND_A) || iph->saddr == IP_ADDRESS(BACKEND_B))
     {
@@ -68,20 +66,16 @@ int tiny_lb(struct xdp_md *ctx)
             return XDP_PASS;
         }
 
-        iph->daddr = *client_ip;
+        iph->daddr = bpf_htonl(*client_ip);
         eth->h_dest[5] = CLIENT;
-    } else {
-        flag = 0;
-    }
-
-    if (!flag) {
-        return XDP_PASS;
     }
 
     iph->saddr = IP_ADDRESS(LB);
     eth->h_source[5] = LB;
 
     iph->check = iph_csum(iph);
+
+    bpf_printk("Forward from lb %x to client %x", iph->saddr, iph->daddr);
 
     return XDP_TX;
 }

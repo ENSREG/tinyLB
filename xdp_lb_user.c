@@ -3,7 +3,9 @@
 #include <unistd.h>
 #include <linux/bpf.h>
 #include <libbpf.h>
-#include<signal.h>
+#include <signal.h>
+
+#define IP_ADDRESS(a, b, c, d) (unsigned int)(a + (b << 8) + (c << 16) + (d << 24))
 
 struct bpf_object *obj;
 int lb_map_fd;
@@ -40,10 +42,10 @@ int main() {
 
     printf("bpf load success\n");
 
-    unsigned int client_ip = 0xC0110004;
-    unsigned int backend_a_ip = 0xC0110002;
-    unsigned int backend_b_ip = 0xC0110003;
-    unsigned int lb_ip = 0xC0110005;
+    unsigned int client_ip = IP_ADDRESS(192, 17, 0, 4);
+    unsigned int backend_a_ip = IP_ADDRESS(192, 17, 0, 2);
+    unsigned int backend_b_ip = IP_ADDRESS(192, 17, 0, 3);
+    unsigned int lb_ip = IP_ADDRESS(192, 17, 0, 5);
 
     unsigned int c = 4;
     unsigned int a = 2;

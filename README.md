@@ -58,23 +58,19 @@ $ bpftool map show
 47: hash  name lb_map  flags 0x0
         key 4B  value 4B  max_entries 64  memlock 8192B
         btf_id 164
-$ bpftool map dump id 47
+$ bpftool map dump name lb_map
 [{
         "key": 3,
         "value": 3222339587
     },{
-        "key": 2,
-        "value": 3222339586
+        "key": 4,
+        "value": 3222339588
     },{
         "key": 5,
         "value": 3222339589
     },{
-        "key": 4,
-        "value": 3222339588
+        "key": 2,
+        "value": 3222339586
     }
 ]
-```
-或是：
-```bash
-$ bpftool map dump name lb_map
 ```

@@ -53,7 +53,8 @@ xdp: $(BPF_OBJ)
 	# bpftool prog load $(BPF_OBJ) /sys/fs/bpf/$(TARGET)
 
 run: $(BPF_OBJ)
-	./xdp_lb_user &
+	./main &
+	# ./xdp_lb_user &
 	sleep 1 && bpftool net attach xdpgeneric name tiny_lb dev eth0
 	sleep infinity
 

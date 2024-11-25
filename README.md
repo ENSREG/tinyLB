@@ -10,6 +10,11 @@ TinyLB 依賴 [libbpf](https://github.com/libbpf/libbpf/tree/8bdc267e7b853ca08ed
 make dep
 ```
 
+編譯 eBPF program user-space agent：
+```sh
+make build
+```
+
 
 ## 開始
 

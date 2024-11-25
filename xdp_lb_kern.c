@@ -34,13 +34,13 @@ int tiny_lb(struct xdp_md *ctx)
     if (data + sizeof(struct ethhdr) > data_end)
         return XDP_ABORTED;
 
-    if (bpf_ntohs(BPF_CORE_READ(eth, h_proto)) != ETH_P_IP)
+    if (bpf_ntohs(eth->h_proto) != ETH_P_IP)
         return XDP_PASS;
     struct iphdr *iph = data + sizeof(struct ethhdr);
     if (data + sizeof(struct ethhdr) + sizeof(struct iphdr) > data_end)
         return XDP_ABORTED;
 
-    if (BPF_CORE_READ(iph, protocol) != IPPROTO_TCP)
+    if (iph->protocol != IPPROTO_TCP)
         return XDP_PASS;
 
     struct tcphdr *tcph = data + sizeof(struct ethhdr) + sizeof(struct iphdr);
@@ -48,9 +48,9 @@ int tiny_lb(struct xdp_md *ctx)
         return XDP_ABORTED;
 
 
-    __be32 ip_saddr = BPF_CORE_READ(iph, saddr);
+    __be32 ip_saddr = iph->saddr;
     if (ip_saddr == IP_ADDRESS(CLIENT) && 
-        bpf_ntohs(BPF_CORE_READ(tcph, dest)) == HTTP_PORT)
+        bpf_ntohs(tcph->dest) == HTTP_PORT)
     {
         bpf_printk("Got http request from %x", ip_saddr);
         int dst = BACKEND_A;

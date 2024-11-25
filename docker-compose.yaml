@@ -3,13 +3,15 @@ services:
   client:
     container_name: client
     image: ubuntu:20.04
-    command: bash -c "apt-get update && apt-get install -y curl && sleep infinity"
+    command: bash -c "apt-get update && apt-get install -y curl iputils-ping && sleep infinity"
     privileged: true
     cap_add:
       - NET_ADMIN
     networks:
       lbnet:
         ipv4_address: 192.17.0.4
+    depends_on:
+      - lb
 
   lb:
     container_name: lb
@@ -24,6 +26,7 @@ services:
       - ./xdp_lb_kern.h:/ianchen/xdp_lb_kern.h
       - ./xdp_lb_kern.c:/ianchen/xdp_lb_kern.c
       - ./vmlinux:/ianchen/vmlinux
+      - ./main:/ianchen/main
     networks:
       lbnet:
         ipv4_address: 192.17.0.5
@@ -37,6 +40,9 @@ services:
     networks:
       lbnet:
         ipv4_address: 192.17.0.2
+    depends_on:
+    - lb
+
   backend-b:
     container_name: backend-b
     image: nginxdemos/hello:plain-text
@@ -46,6 +52,9 @@ services:
     networks:
       lbnet:
         ipv4_address: 192.17.0.3
+    depends_on:
+      - lb
+
 networks:
   lbnet:
     ipam:

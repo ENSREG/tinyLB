@@ -7,6 +7,16 @@
 #define LB 5
 #define HTTP_PORT 80
 
+SEC("tp_btf/netif_rx")
+int BPF_PROG(capture_skb, struct sk_buff *skb)
+{
+    if (!skb || !skb->dev) {
+        return -1;
+    }
+    bpf_printk("Got skb from %s", skb->dev->name);
+    return 0;
+}
+
 struct {
 	__uint(type, BPF_MAP_TYPE_HASH);
 	__type(key, __u32);
@@ -14,7 +24,7 @@ struct {
 	__uint(max_entries, 64);
 } lb_map SEC(".maps");
 
-SEC("xdp_lb")
+SEC("xdp")
 int tiny_lb(struct xdp_md *ctx)
 {
     void *data = (void *)(long)ctx->data;

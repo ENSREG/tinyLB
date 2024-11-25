@@ -1,0 +1,16 @@
+github.com/aquasecurity/libbpfgo v0.7.0-libbpf-1.4 h1:rQ94U12Xlz2tncE8Rxnw3vpp/9hgUIEu3/Lv0/XQM0Q=
+github.com/aquasecurity/libbpfgo v0.7.0-libbpf-1.4/go.mod h1:iI7QCIZ3kXG0MR+FHsDZck6cYs1y1HyZP3sMObBg0sk=
+github.com/aquasecurity/libbpfgo v0.7.0-libbpf-1.4.0.20241111134407-c561f7f9beae h1:t2aihFg2Au8zY9xoY+oiS15o3uvIwurrr8yotgv176w=
+github.com/aquasecurity/libbpfgo v0.7.0-libbpf-1.4.0.20241111134407-c561f7f9beae/go.mod h1:G2LCsacdU0X8yDvNde+ywGPA8WhysZfkDDBVnWs8qEA=
+github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
+github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
+github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZbAQM=
+github.com/pmezard/go-difflib v1.0.0/go.mod h1:iKH77koFhYxTK1pcRnkKkqfTogsbg7gZNVY4sRDYZ/4=
+github.com/stretchr/testify v1.9.0 h1:HtqpIVDClZ4nwg75+f6Lvsy/wHu+3BoSGCbBAcpTsTg=
+github.com/stretchr/testify v1.9.0/go.mod h1:r2ic/lqez/lEtzL7wO/rwa5dbSLXVDPFyf8C91i36aY=
+gopkg.in/yaml.v3 v3.0.1 h1:fxVm/GzAzEWqLHuvctI91KS9hhNmmWOoWu0XTYJS7CA=
+gopkg.in/yaml.v3 v3.0.1/go.mod h1:K4uyk7z7BCEPqu6E+C64Yfv1cQ7kz7rIZviUmN+EgEM=
+kernel.org/pub/linux/libs/security/libcap/cap v1.2.72 h1:SqLZbTqwcNxctcdM5yb6OcO3lFJNtRgDJoFeca+5hP0=
+kernel.org/pub/linux/libs/security/libcap/cap v1.2.72/go.mod h1:DqOj+O+b5nV0YW49IVU6WlhVw0oHpC1LmerDRHvcbjE=
+kernel.org/pub/linux/libs/security/libcap/psx v1.2.72 h1:Lnu8woGlvNdwCbBa5urxGO+L5gp647lIZMg0vP+upuU=
+kernel.org/pub/linux/libs/security/libcap/psx v1.2.72/go.mod h1:+l6Ee2F59XiJ2I6WR5ObpC1utCQJZ/VLsEbQCD8RG24=
